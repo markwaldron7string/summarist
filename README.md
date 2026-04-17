@@ -1,4 +1,4 @@
-# 📚 Summarist Clone – Full Stack Web App
+# 📚 Summarist Library – Full Stack Web App
 
 A modern book summary platform inspired by Summarist, built with Next.js, Redux, and Firebase authentication. This app allows users to explore curated book summaries, listen to audio versions, and unlock premium content through a simulated subscription flow.
 
