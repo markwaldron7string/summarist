@@ -58,10 +58,10 @@ A modern book summary platform inspired by Summarist, built with Next.js, Redux,
 
 ---
 
-CI/CD
+## ✅ CI/CD
 
-CI — GitHub Actions runs the Jest suite on every push and pull request (see the badge above).
-CD — Deployment is handled automatically by Vercel, which builds and ships every push to main. Firebase configuration is stored as Vercel environment variables rather than committed to the repo.
+* **CI** — GitHub Actions runs the Jest suite on every push and pull request (see the badge above).
+* **CD** — Deployment is handled automatically by Vercel, which builds and ships every push to main. Firebase configuration is stored as Vercel environment variables rather than committed to the repo.
 
 ---
 
