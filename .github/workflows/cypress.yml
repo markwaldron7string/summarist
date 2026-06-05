@@ -1,0 +1,37 @@
+mkdir -p .github/workflows
+cat > .github/workflows/cypress.yml << 'YAML'
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Create placeholder Firebase env for build
+        run: |
+          cat > .env.local << 'EOF'
+          NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyDummyKeyForBuildOnly000000000000000
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=demo.firebaseapp.com
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID=demo-project
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=demo-project.appspot.com
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=000000000000
+          NEXT_PUBLIC_FIREBASE_APP_ID=1:000000000000:web:0000000000000000000000
+          EOF
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm run start
+          wait-on: 'http://localhost:3000'
+          wait-on-timeout: 120
+YAML
