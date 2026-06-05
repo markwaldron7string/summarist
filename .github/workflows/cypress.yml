@@ -1,5 +1,4 @@
-mkdir -p .github/workflows
-cat > .github/workflows/cypress.yml << 'YAML'
+cat > .github/workflows/cypress.yml << 'ENDOFYAML'
 name: E2E
 
 on:
@@ -34,4 +33,4 @@ jobs:
           start: npm run start
           wait-on: 'http://localhost:3000'
           wait-on-timeout: 120
-YAML
+ENDOFYAML
