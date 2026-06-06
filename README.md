@@ -1,4 +1,5 @@
 ![CI](https://github.com/markwaldron7string/summarist/actions/workflows/ci.yml/badge.svg)
+![E2E](https://github.com/markwaldron7string/Advanced-Virtual-Internship/actions/workflows/cypress.yml/badge.svg)
 
 # 📚 Summarist Library – Full Stack Web App
 
