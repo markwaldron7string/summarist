@@ -1,5 +1,9 @@
 ![CI](https://github.com/markwaldron7string/summarist/actions/workflows/ci.yml/badge.svg)
 ![E2E](https://github.com/markwaldron7string/Advanced-Virtual-Internship/actions/workflows/cypress.yml/badge.svg)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![Redux](https://img.shields.io/badge/Redux_Toolkit-764abc?logo=redux&logoColor=white)](https://redux-toolkit.js.org)
+[![Firebase](https://img.shields.io/badge/Firebase_Auth-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
+[![Vercel](https://img.shields.io/badge/Deployed-Vercel-000000?logo=vercel&logoColor=white)](YOUR_LIVE_URL)
 
 # 📚 Summarist Library – Full Stack Web App
 
