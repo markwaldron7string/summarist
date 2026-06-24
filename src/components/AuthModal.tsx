@@ -118,6 +118,11 @@ export default function AuthModal() {
       }
     } catch (err) {
       console.error(err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Google sign-in failed. Please try again."
+      );
     }
   };
 

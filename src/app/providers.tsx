@@ -4,7 +4,11 @@ import { Provider, useDispatch } from "react-redux";
 import { store } from "@/redux/store";
 import { useEffect } from "react";
 
-import { getFirebaseAuth } from "@/lib/firebase";
+import {
+  getFirebaseAuth,
+  setFirebaseConfig,
+  type FirebaseClientConfig,
+} from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { setUser } from "@/redux/slices/authSlice";
@@ -50,9 +54,13 @@ function AuthListener({ children }: { children: React.ReactNode }) {
 
 export default function Providers({
   children,
+  firebaseConfig,
 }: {
   children: React.ReactNode;
+  firebaseConfig: FirebaseClientConfig;
 }) {
+  setFirebaseConfig(firebaseConfig);
+
   return (
     <Provider store={store}>
       <AuthListener>{children}</AuthListener>
