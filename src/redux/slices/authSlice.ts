@@ -31,11 +31,22 @@ const getStoredUser = () => {
   }
 };
 
+const getStoredSubscriptionIntent = (): SubscriptionType | null => {
+  if (typeof window === "undefined") return null;
+
+  try {
+    const stored = localStorage.getItem("subscriptionIntent");
+    return stored ? JSON.parse(stored) : null;
+  } catch {
+    return null;
+  }
+};
+
 const initialState: AuthState = {
   user: getStoredUser(),
   isAuthModalOpen: false,
   authMode: "login",
-  subscriptionIntent: null,
+  subscriptionIntent: getStoredSubscriptionIntent(),
   previousAuthMode: null, // ✅ NEW
 };
 
@@ -68,6 +79,10 @@ const authSlice = createSlice({
       action: PayloadAction<SubscriptionType>
     ) => {
       state.subscriptionIntent = action.payload;
+      localStorage.setItem(
+        "subscriptionIntent",
+        JSON.stringify(action.payload)
+      );
     },
 
     login: (state, action: PayloadAction<User>) => {
@@ -77,11 +92,14 @@ const authSlice = createSlice({
       state.previousAuthMode = null; 
 
       localStorage.setItem("user", JSON.stringify(action.payload));
+      localStorage.removeItem("subscriptionIntent");
     },
 
     logout: (state) => {
       state.user = null;
+      state.subscriptionIntent = null;
       localStorage.removeItem("user");
+      localStorage.removeItem("subscriptionIntent");
       localStorage.removeItem("postLoginRedirect");
     },
 

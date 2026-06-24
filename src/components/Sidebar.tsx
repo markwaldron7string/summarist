@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import { openAuthModal, logout } from "@/redux/slices/authSlice";
+import { auth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
 import { useFontSize } from "@/context/FontSizeContext";
 
 import {
@@ -150,12 +152,15 @@ export default function Sidebar({ open }: SidebarProps) {
 
         <div
           className="sidebar__item"
-          onClick={() => {
+          onClick={async () => {
             if (!mounted) return;
 
-            user
-              ? dispatch(logout())
-              : dispatch(openAuthModal("login"));
+            if (user) {
+              await signOut(auth).catch(() => {});
+              dispatch(logout());
+            } else {
+              dispatch(openAuthModal("login"));
+            }
           }}
         >
           <span className="sidebar__indicator" />

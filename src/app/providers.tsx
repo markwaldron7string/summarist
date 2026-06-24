@@ -7,22 +7,36 @@ import { useEffect } from "react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { login, logout } from "@/redux/slices/authSlice";
+import { login } from "@/redux/slices/authSlice";
+import type { SubscriptionType } from "@/redux/slices/authSlice";
 
 function AuthListener({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const stored = localStorage.getItem("user");
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (!firebaseUser?.email) return;
 
-        if (stored) {
-          dispatch(login(JSON.parse(stored)));
+      const stored = localStorage.getItem("user");
+      let subscription: SubscriptionType = "free-trial";
+
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed.email === firebaseUser.email && parsed.subscription) {
+            subscription = parsed.subscription;
+          }
+        } catch {
+          // ignore malformed stored user
         }
-      } else {
-        dispatch(logout());
       }
+
+      dispatch(
+        login({
+          email: firebaseUser.email,
+          subscription,
+        })
+      );
     });
 
     return () => unsubscribe();
