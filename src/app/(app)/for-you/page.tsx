@@ -6,6 +6,7 @@ import {
   getSelectedBook,
   getRecommendedBooks,
   getSuggestedBooks,
+  type Book,
 } from "@/services/books";
 import BookCard from "@/components/BookCard";
 import { MdPlayCircle } from "react-icons/md";
@@ -22,9 +23,9 @@ export default function ForYouPage() {
   const recommendedRef = useRef<HTMLDivElement>(null);
   const suggestedRef = useRef<HTMLDivElement>(null);
 
-  const [selectedBook, setSelectedBook] = useState<any>(null);
-  const [recommendedBooks, setRecommendedBooks] = useState<any[]>([]);
-  const [suggestedBooks, setSuggestedBooks] = useState<any[]>([]);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
+  const [suggestedBooks, setSuggestedBooks] = useState<Book[]>([]);
   const [selectedDuration, setSelectedDuration] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -108,7 +109,7 @@ export default function ForYouPage() {
 
           <section>
             <h2>Recommended For You</h2><br/>
-            <p className="section-subtitle">We think you'll like these</p>
+            <p className="section-subtitle">We think you&apos;ll like these</p>
 
             <div className="books-row">
               {[...Array(6)].map((_, i) => (
@@ -192,7 +193,7 @@ export default function ForYouPage() {
         <section>
           <h2>Recommended For You</h2>
           <br />
-          <p className="section-subtitle">We think you'll like these</p>
+          <p className="section-subtitle">We think you&apos;ll like these</p>
 
           <div className="carousel-wrapper">
 

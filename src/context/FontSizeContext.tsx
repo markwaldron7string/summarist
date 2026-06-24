@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 type FontContextType = {
   fontSize: number;
@@ -9,15 +9,15 @@ type FontContextType = {
 
 const FontSizeContext = createContext<FontContextType | null>(null);
 
-export function FontSizeProvider({ children }: { children: React.ReactNode }) {
-  const [fontSize, setFontSizeState] = useState(16); // smallest size default
+const getInitialFontSize = () => {
+  if (typeof window === "undefined") return 16;
 
-  useEffect(() => {
-    const saved = localStorage.getItem("reader-font-size");
-    if (saved) {
-      setFontSizeState(Number(saved));
-    }
-  }, []);
+  const saved = localStorage.getItem("reader-font-size");
+  return saved ? Number(saved) : 16;
+};
+
+export function FontSizeProvider({ children }: { children: React.ReactNode }) {
+  const [fontSize, setFontSizeState] = useState(getInitialFontSize);
 
   const setFontSize = (size: number) => {
     setFontSizeState(size);

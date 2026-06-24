@@ -6,7 +6,9 @@ import { FaClock, FaStar } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
-export default function BookCard({ book }: any) {
+import type { Book } from "@/services/books";
+
+export default function BookCard({ book }: { book: Book }) {
   const router = useRouter();
   const [duration, setDuration] = useState("");
   const user = useSelector((state: RootState) => state.auth.user);

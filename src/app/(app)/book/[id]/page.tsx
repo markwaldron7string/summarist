@@ -267,7 +267,7 @@ export default function BookPage() {
             )}
           </button>
 
-          <h4 className="book-section-title">What's it about?</h4>
+          <h4 className="book-section-title">What&apos;s it about?</h4>
 
           <div className="book-tags">
             {book.tags?.map((tag) => (

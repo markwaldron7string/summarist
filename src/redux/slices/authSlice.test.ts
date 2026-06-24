@@ -5,6 +5,8 @@ import reducer, {
   logout,
   setAuthMode,
   setSubscription,
+  setSubscriptionIntent,
+  setUser,
 } from './authSlice'
 import type { User } from './authSlice'
 
@@ -60,6 +62,17 @@ describe('authSlice', () => {
 
     expect(next.authMode).toBe('reset')
     expect(next.previousAuthMode).toBe('register') // the branch fired
+  })
+
+  it('syncs a Firebase user without clearing subscription intent', () => {
+    const withIntent = reducer(undefined, setSubscriptionIntent('premium'))
+    const next = reducer(
+      withIntent,
+      setUser({ email: 'mark@example.com', subscription: 'free-trial' })
+    )
+
+    expect(next.user?.email).toBe('mark@example.com')
+    expect(next.subscriptionIntent).toBe('premium')
   })
 
   it('does nothing on setSubscription when no user is logged in', () => {

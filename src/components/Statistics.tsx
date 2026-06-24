@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 const statisticsData = [
@@ -34,7 +35,7 @@ export default function Statistics() {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % statisticsData.length);
-    }, 1500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -43,7 +44,6 @@ export default function Statistics() {
     <section id="statistics">
       <div className="container">
         <div className="statistics__grid">
-          {/* TOP LEFT */}
           <div className="statistics__list statistics__list--left">
             {statisticsData.map((item, index) => (
               <div
@@ -57,7 +57,6 @@ export default function Statistics() {
             ))}
           </div>
 
-          {/* TOP RIGHT (STATIC CARD) */}
           <div className="statistics__card statistics__card--top">
             <p>
               <span>93%</span> of Summarist members <b>significantly increase </b>
@@ -71,11 +70,10 @@ export default function Statistics() {
             </p>
           </div>
 
-          {/* BOTTOM LEFT (STATIC CARD) */}
           <div className="statistics__card statistics__card--bottom">
             <p>
               <span>91%</span> of Summarist members <b>report feeling more productive </b>
-              after incorporating the service into their daily routine. 
+              after incorporating the service into their daily routine.
             </p>
             <p>
               <span>94%</span> of Summarist members have <b>noticed an improvement </b>
@@ -83,11 +81,10 @@ export default function Statistics() {
             </p>
             <p>
               <span>88%</span> of Summarist members <b>feel more informed </b>
-              about current events and industry trends since using the platform. 
+              about current events and industry trends since using the platform.
             </p>
           </div>
 
-          {/* BOTTOM RIGHT */}
           <div className="statistics__list statistics__list--right">
             {statisticsData.map((item, index) => (
               <div

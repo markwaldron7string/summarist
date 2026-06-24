@@ -54,12 +54,19 @@ export default function Sidebar({ open }: SidebarProps) {
   useEffect(() => {
     const activeButton = buttonRefs.current[activeIndex];
     const indicator = indicatorRef.current;
+    const container = activeButton?.parentElement;
 
-    if (activeButton && indicator) {
-      indicator.style.left = `${activeButton.offsetLeft + activeButton.offsetWidth * 0.2}px`;
-      indicator.style.width = `${activeButton.offsetWidth * 0.6}px`;
-    }
-  }, [activeIndex]);
+    if (!activeButton || !indicator || !container || activeIndex < 0) return;
+
+    const icon = activeButton.querySelector("svg");
+    if (!icon) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const iconRect = icon.getBoundingClientRect();
+
+    indicator.style.left = `${iconRect.left - containerRect.left}px`;
+    indicator.style.width = `${iconRect.width}px`;
+  }, [activeIndex, fontSize]);
 
   return (
     <aside className={`sidebar ${open ? "sidebar-open" : ""}`}>

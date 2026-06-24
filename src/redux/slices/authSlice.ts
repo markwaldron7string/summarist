@@ -17,7 +17,7 @@ interface AuthState {
   isAuthModalOpen: boolean;
   authMode: AuthMode;
   subscriptionIntent: SubscriptionType | null;
-  previousAuthMode: AuthMode | null; // ✅ NEW
+  previousAuthMode: AuthMode | null;
 }
 
 const getStoredUser = () => {
@@ -47,7 +47,7 @@ const initialState: AuthState = {
   isAuthModalOpen: false,
   authMode: "login",
   subscriptionIntent: getStoredSubscriptionIntent(),
-  previousAuthMode: null, // ✅ NEW
+  previousAuthMode: null,
 };
 
 const authSlice = createSlice({
@@ -85,11 +85,16 @@ const authSlice = createSlice({
       );
     },
 
+    setUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action.payload));
+    },
+
     login: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
       state.isAuthModalOpen = false;
       state.subscriptionIntent = null;
-      state.previousAuthMode = null; 
+      state.previousAuthMode = null;
 
       localStorage.setItem("user", JSON.stringify(action.payload));
       localStorage.removeItem("subscriptionIntent");
@@ -120,6 +125,7 @@ export const {
   openAuthModal,
   closeAuthModal,
   setAuthMode,
+  setUser,
   login,
   logout,
   setSubscription,

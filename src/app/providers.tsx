@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { login } from "@/redux/slices/authSlice";
+import { setUser } from "@/redux/slices/authSlice";
 import type { SubscriptionType } from "@/redux/slices/authSlice";
 
 function AuthListener({ children }: { children: React.ReactNode }) {
@@ -32,7 +32,7 @@ function AuthListener({ children }: { children: React.ReactNode }) {
       }
 
       dispatch(
-        login({
+        setUser({
           email: firebaseUser.email,
           subscription,
         })

@@ -145,8 +145,10 @@ export default function AuthModal() {
       alert("Password reset email sent.");
 
       dispatch(setAuthMode(previousAuthMode || "login")); // ✅ FIX
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong.";
+      setError(message);
     }
   };
 
@@ -223,8 +225,12 @@ export default function AuthModal() {
 
               {error && <p style={{ color: "red" }}>{error}</p>}
 
-              <button className="btn auth-modal__submit" onClick={handleSubmit}>
-                {isSignupPlan ? "Sign up" : "Login"}
+              <button
+                className="btn auth-modal__submit"
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? "Please wait..." : isSignupPlan ? "Sign up" : "Login"}
               </button>
 
               <p className="auth-modal__forgot">
@@ -270,7 +276,7 @@ export default function AuthModal() {
 
         {authMode === "login" && (
           <p className="auth-modal__switch">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <span
               onClick={() => {
                 dispatch(closeAuthModal());

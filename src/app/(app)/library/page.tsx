@@ -1,33 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { openAuthModal } from "@/redux/slices/authSlice";
 import Image from "next/image";
 import BookCard from "@/components/BookCard";
-
-type Book = {
-  id: string;
-  title: string;
-  author: string;
-  imageLink: string;
-  summary: string;
-};
+import type { Book } from "@/services/books";
 
 export default function LibraryPage() {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const [savedBooks, setSavedBooks] = useState<Book[]>([]);
+  const [savedBooks] = useState<Book[]>(() => {
+    if (typeof window === "undefined") return [];
 
-  useEffect(() => {
     const stored = localStorage.getItem("savedBooks");
+    if (!stored) return [];
 
-    if (stored) {
-      setSavedBooks(JSON.parse(stored));
+    try {
+      return JSON.parse(stored) as Book[];
+    } catch {
+      return [];
     }
-  }, []);
+  });
 
   /* Logged out view */
   if (!user) {

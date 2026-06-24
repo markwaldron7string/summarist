@@ -241,11 +241,11 @@ export default function PlayerPage() {
             value={currentTime}
             onChange={(e) => (user ? handleSeek(e) : openLogin())}
             className="audio-player__timeline"
-            style={{
-              ["--progress" as any]: `${
-                (currentTime / duration) * 100
-              }%`,
-            }}
+            style={
+              {
+                "--progress": `${(currentTime / duration) * 100}%`,
+              } as React.CSSProperties
+            }
           />
 
           <span className="time">{formatTime(duration)}</span>
