@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { clearAuthSessionMarker } from "@/lib/authSession";
 
 export type SubscriptionType =
   | "free-trial"
@@ -106,6 +107,7 @@ const authSlice = createSlice({
       localStorage.removeItem("user");
       localStorage.removeItem("subscriptionIntent");
       localStorage.removeItem("postLoginRedirect");
+      clearAuthSessionMarker();
     },
 
     setSubscription: (

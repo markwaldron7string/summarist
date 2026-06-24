@@ -10,9 +10,14 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   sendPasswordResetEmail,
+  signOut,
 } from "firebase/auth";
 
 import { getFirebaseAuth } from "@/lib/firebase";
+import {
+  markFirebaseAuthSession,
+  markLocalAuthSession,
+} from "@/lib/authSession";
 import Image from "next/image";
 
 export default function AuthModal() {
@@ -28,6 +33,30 @@ export default function AuthModal() {
   const [loading, setLoading] = useState(false);
 
   const googleProvider = new GoogleAuthProvider();
+
+  const clearFirebaseSession = async () => {
+    const auth = getFirebaseAuth();
+    if (!auth) return;
+    await signOut(auth).catch(() => {});
+  };
+
+  const finishLogin = (email: string) => {
+    dispatch(
+      login({
+        email,
+        subscription: "free-trial",
+      })
+    );
+
+    const redirect = localStorage.getItem("postLoginRedirect");
+
+    if (redirect) {
+      localStorage.removeItem("postLoginRedirect");
+      router.push(redirect);
+    } else {
+      router.push("/for-you");
+    }
+  };
 
   if (!isAuthModalOpen) return null;
 
@@ -57,21 +86,9 @@ export default function AuthModal() {
         return;
       }
 
-      dispatch(
-        login({
-          email,
-          subscription: "free-trial",
-        })
-      );
-
-      const redirect = localStorage.getItem("postLoginRedirect");
-
-      if (redirect) {
-        localStorage.removeItem("postLoginRedirect");
-        router.push(redirect);
-      } else {
-        router.push("/for-you");
-      }
+      await clearFirebaseSession();
+      markLocalAuthSession();
+      finishLogin(email);
     } catch {
       setError("Something went wrong. Try again.");
     } finally {
@@ -101,21 +118,8 @@ export default function AuthModal() {
         return;
       }
 
-      dispatch(
-        login({
-          email,
-          subscription: "free-trial",
-        }),
-      );
-
-      const redirect = localStorage.getItem("postLoginRedirect");
-
-      if (redirect) {
-        localStorage.removeItem("postLoginRedirect");
-        router.push(redirect);
-      } else {
-        router.push("/for-you");
-      }
+      markFirebaseAuthSession();
+      finishLogin(email);
     } catch (err) {
       console.error(err);
       setError(
@@ -128,22 +132,10 @@ export default function AuthModal() {
 
   /* ---------------- GUEST LOGIN ---------------- */
 
-  const handleGuestLogin = () => {
-    dispatch(
-      login({
-        email: "guest@summarist.app",
-        subscription: "free-trial",
-      }),
-    );
-
-    const redirect = localStorage.getItem("postLoginRedirect");
-
-    if (redirect) {
-      localStorage.removeItem("postLoginRedirect");
-      router.push(redirect);
-    } else {
-      router.push("/for-you");
-    }
+  const handleGuestLogin = async () => {
+    await clearFirebaseSession();
+    markLocalAuthSession();
+    finishLogin("guest@summarist.app");
   };
 
   /* ---------------- RESET PASSWORD ---------------- */
@@ -198,6 +190,7 @@ export default function AuthModal() {
             {!isSignupPlan && (
               <>
                 <button
+                  type="button"
                   className="auth-modal__guest"
                   onClick={handleGuestLogin}
                 >

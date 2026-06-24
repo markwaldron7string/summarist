@@ -11,17 +11,43 @@ import {
 } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
+import {
+  isLocalAuthSession,
+  markFirebaseAuthSession,
+  readStoredUser,
+} from "@/lib/authSession";
 import { setUser } from "@/redux/slices/authSlice";
 import type { SubscriptionType } from "@/redux/slices/authSlice";
 
-function AuthListener({ children }: { children: React.ReactNode }) {
+function AuthListener({
+  children,
+  firebaseConfig,
+}: {
+  children: React.ReactNode;
+  firebaseConfig: FirebaseClientConfig;
+}) {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const storedUser = readStoredUser();
+    if (storedUser && isLocalAuthSession()) {
+      dispatch(setUser(storedUser));
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     const auth = getFirebaseAuth();
     if (!auth) return;
 
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (isLocalAuthSession()) {
+        const storedUser = readStoredUser();
+        if (storedUser) {
+          dispatch(setUser(storedUser));
+        }
+        return;
+      }
+
       if (!firebaseUser?.email) return;
 
       const stored = localStorage.getItem("user");
@@ -38,6 +64,7 @@ function AuthListener({ children }: { children: React.ReactNode }) {
         }
       }
 
+      markFirebaseAuthSession();
       dispatch(
         setUser({
           email: firebaseUser.email,
@@ -47,7 +74,7 @@ function AuthListener({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [dispatch]);
+  }, [dispatch, firebaseConfig]);
 
   return <>{children}</>;
 }
@@ -63,7 +90,7 @@ export default function Providers({
 
   return (
     <Provider store={store}>
-      <AuthListener>{children}</AuthListener>
+      <AuthListener firebaseConfig={firebaseConfig}>{children}</AuthListener>
     </Provider>
   );
 }
