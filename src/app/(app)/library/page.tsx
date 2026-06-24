@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { openAuthModal } from "@/redux/slices/authSlice";
@@ -59,20 +60,28 @@ export default function LibraryPage() {
       <div className="library-page-container">
 
         <h2>Saved Books</h2>
-        <p>{savedBooks.length} items</p>
+        <p className="section-subtitle">{savedBooks.length} items</p>
 
-        <div className="books-row">
-          {savedBooks.length === 0 && (
-            <div className="save-fave__books">
-              <h3>📚 Save your favorite books! 📖</h3>
-              <h4>When you save a book, it will appear here.</h4>
+        {savedBooks.length === 0 ? (
+          <div className="library-empty">
+            <div className="library-empty__icon" aria-hidden="true">
+              📚
             </div>
-          )}
-
-          {savedBooks.map((book) => (
-            <BookCard key={book.id} book={book} />
-          ))}
-        </div>
+            <h3 className="library-empty__title">Save your favorite books</h3>
+            <p className="library-empty__text">
+              Save books from their detail page and they&apos;ll show up here.
+            </p>
+            <Link href="/for-you" className="btn library-empty__cta">
+              Browse books
+            </Link>
+          </div>
+        ) : (
+          <div className="books-row">
+            {savedBooks.map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
+          </div>
+        )}
 
       </div>
     </div>
