@@ -12,7 +12,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 import Image from "next/image";
 
 export default function AuthModal() {
@@ -82,6 +82,12 @@ export default function AuthModal() {
   /* ---------------- GOOGLE LOGIN ---------------- */
 
   const handleGoogleLogin = async () => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setError("Google sign-in is unavailable right now.");
+      return;
+    }
+
     try {
       const res = await signInWithPopup(auth, googleProvider);
       const email = res.user.email!;
@@ -140,11 +146,17 @@ export default function AuthModal() {
   const handleResetPassword = async () => {
     setError("");
 
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      setError("Password reset is unavailable right now.");
+      return;
+    }
+
     try {
       await sendPasswordResetEmail(auth, email);
       alert("Password reset email sent.");
 
-      dispatch(setAuthMode(previousAuthMode || "login")); // ✅ FIX
+      dispatch(setAuthMode(previousAuthMode || "login"));
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : "Something went wrong.";

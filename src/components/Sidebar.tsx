@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import { openAuthModal, logout } from "@/redux/slices/authSlice";
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import { useFontSize } from "@/context/FontSizeContext";
 
@@ -163,7 +163,8 @@ export default function Sidebar({ open }: SidebarProps) {
             if (!mounted) return;
 
             if (user) {
-              await signOut(auth).catch(() => {});
+              const auth = getFirebaseAuth();
+              if (auth) await signOut(auth).catch(() => {});
               dispatch(logout());
             } else {
               dispatch(openAuthModal("login"));

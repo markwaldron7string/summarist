@@ -4,7 +4,7 @@ import { Provider, useDispatch } from "react-redux";
 import { store } from "@/redux/store";
 import { useEffect } from "react";
 
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { setUser } from "@/redux/slices/authSlice";
@@ -14,6 +14,9 @@ function AuthListener({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) return;
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (!firebaseUser?.email) return;
 
